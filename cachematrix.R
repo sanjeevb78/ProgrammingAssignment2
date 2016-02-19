@@ -1,31 +1,32 @@
-## Put comments here that give an overall description of what your
 # The below function will take a matrix as input and will reverse the matrix
 
-makeCacheMatrix <- function(x = numeric()){
-        m <- NULL
-        set <- function(y){
+makeCacheMatrix <- function(x = matrix()) {
+        inv <- NULL
+        set <- function(y) {
                 x <<- y
-                m <<- NULL
+                inv <<- NULL
         }
         get <- function() x
-        setinverse <- function(solve) m <<- solve(m)
-        getinverse <- function() m
-        list(set = set, get = get, setinverse = setinverse, getinverse = getinverse)
+        setInverse <- function(inverse) inv <<- inverse
+        getInverse <- function() inv
+        list(set = set,
+             get = get,
+             setInverse = setInverse,
+             getInverse = getInverse)
 }
 
 
-## Write a short comment describing this function
-#Here we will use previous function to inverse the matrix
 
-cacheSolve <- function(x = matrix()){
+#Here we will use previous function to inverse the matrix
+cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
-        m <- NULL
-        set <- function(y){
-                x <<- y
-                m <<- NULL
+        inv <- x$getInverse()
+        if (!is.null(inv)) {
+                message("getting cached data")
+                return(inv)
         }
-        get <- function() x
-        setinverse <- function(solve) m <<- solve(m)
-        getinverse <- function() m
-        list(set = set, get = get, setinverse = setinverse, getinverse = getinverse)
+        mat <- x$get()
+        inv <- solve(mat, ...)
+        x$setInverse(inv)
+        inv
 }
